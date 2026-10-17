@@ -20,8 +20,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Google Sans Fle
 button,input,textarea,select{font-variation-settings:'ROND' 100,'opsz' 18}
 button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}
 .wrap{max-width:680px;margin:auto;padding:10px 12px 36px}
-.top{padding:4px 0 9px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;min-height:49px}
-.brand{display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;min-width:0}
+.top{padding:4px 0 9px 7px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:49px}
+.brand{display:flex;align-items:center;justify-content:flex-start;gap:7px;white-space:nowrap;min-width:0}
 .brandEmoji{font-size:24px;line-height:1}
 .langSwitch{justify-self:end;display:flex;align-items:center;gap:2px;padding:3px;background:#e4eee8;border-radius:12px}
 .langBtn{border:0;background:transparent;border-radius:9px;padding:5px 8px;min-height:31px;font-size:13px;font-weight:750;color:#526a60}
@@ -100,7 +100,7 @@ button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}bu
 </head>
 <body>
 <div class="wrap">
-<header class="top"><div aria-hidden="true"></div><div class="brand"><span class="brandEmoji" aria-hidden="true">💸</span><div class="title">收PAY</div></div><div class="langSwitch" role="group" aria-label="Language"><button class="langBtn selected" data-lang="en" type="button" aria-pressed="true">EN</button><button class="langBtn" data-lang="zh" type="button" aria-pressed="false">中</button></div></header>
+<header class="top"><div class="brand"><span class="brandEmoji" aria-hidden="true">💸</span><div class="title">收PAY</div></div><div class="langSwitch" role="group" aria-label="Language"><button class="langBtn selected" data-lang="en" type="button" aria-pressed="true">EN</button><button class="langBtn" data-lang="zh" type="button" aria-pressed="false">中</button></div></header>
 <nav class="tabs" role="tablist" aria-label="Sections">
 <button class="tab active" type="button" data-tab="people" role="tab" aria-selected="true">People</button>
 <button class="tab" type="button" data-tab="entries" role="tab" aria-selected="false">Entries</button>
