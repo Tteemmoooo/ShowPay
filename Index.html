@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f7f6">
+<title>收PAY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;650;700;750;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7f5;--surface:#fff;--ink:#152920;--muted:#617369;--line:#dce8e0;--primary:#156d5d;--soft:#e8f3ed;--positive:#187658;--negative:#c1534d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Google Sans Flex',Roboto,Arial,sans-serif;font-size:16px;line-height:1.35;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}
+.wrap{max-width:680px;margin:auto;padding:10px 12px 36px}
+.top{padding:4px 3px 8px;display:flex;align-items:center;justify-content:space-between}
+.title{font-size:23px;font-weight:800;letter-spacing:-.5px}
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 12px;background:#e5eee9;border-radius:16px;position:sticky;top:0;z-index:10}
+.tab{border:0;border-radius:12px;background:transparent;min-height:43px;font-size:16px;font-weight:750;color:#516c61}
+.tab.active{background:#fff;color:#106753;box-shadow:0 2px 7px #164c3e12}
+.panel{display:none}.panel.active{display:block}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px;margin-bottom:11px}
+.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:0 0 11px}
+.sectionTitle{font-size:18px;line-height:1.3;font-weight:780;margin:0}
+.tiny{font-size:14px}.muted{color:var(--muted)}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 13px;min-height:43px;border-radius:13px;font-size:15px;font-weight:730;white-space:nowrap}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:white}
+.btn.small{font-size:14px;padding:7px 10px;min-height:36px;border-radius:10px}
+.btn.fill{width:100%}.btn.danger{color:var(--negative);border-color:#eedbd8}
+.btn:active,.tab:active{transform:scale(.986)}
+.control{background:#fcfdfc;border:1px solid #d8e5de;border-radius:12px;padding:10px 11px;min-height:44px;width:100%;font-size:16px;min-width:0;outline:none}
+.control:focus{border-color:#207e6c;box-shadow:0 0 0 3px #207e6c1a}
+.inlineAdd{display:flex;align-items:stretch;gap:8px}.inlineAdd .control{flex:1;min-height:56px;resize:vertical}.inlineAdd .btn{align-self:stretch}
+.field{display:block;margin:11px 0}.field>span,.field .fieldTitle{display:block;color:var(--muted);font-weight:700;font-size:14px;margin:0 0 5px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.row{display:flex;align-items:center;gap:9px}.row>*{min-width:0}
+.pile{display:grid;gap:6px}.person{display:flex;align-items:center;gap:7px;background:#fafcfb;border:1px solid #e4ebe7;padding:7px;border-radius:12px}
+.avatar{width:31px;min-width:31px;height:34px;display:grid;place-items:center;background:var(--soft);border-radius:9px;color:var(--primary);font-weight:800;font-size:14px}
+.person .control{min-height:39px;padding:7px 9px}.personName{flex:1}.personGroup{flex:none;width:124px}
+.iconBtn{border:0;background:#edf4ef;color:#62786d;border-radius:9px;width:31px;height:34px;font-size:21px}
+.groupPreview{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.groupTag{background:var(--soft);color:var(--primary);padding:6px 10px;border-radius:99px;font-weight:700;font-size:14px}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;background:#eaf2ec;padding:4px;border-radius:14px}
+.seg button{border:0;background:transparent;border-radius:10px;min-height:42px;padding:8px 1px;color:#526d60;font-size:14px;font-weight:750}
+.seg button.selected{background:#fff;color:var(--primary);box-shadow:0 1px 5px #163d3512}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.chip{border:1px solid #dce8e0;background:#fff;border-radius:11px;padding:9px 11px;display:flex;align-items:center;gap:5px;font-size:15px;font-weight:700}
+.chip.selected{background:var(--soft);color:var(--primary);border-color:#8cb9aa}.check{font-weight:850;font-size:14px}
+.optionSwitch{display:flex;justify-content:space-between;align-items:center;background:#f4f8f5;border-radius:12px;padding:11px;margin:12px 0 0}.optionSwitch label{font-size:14px;font-weight:700}.optionSwitch input{width:20px;height:20px;accent-color:var(--primary)}
+.splitRow{display:flex;gap:10px;justify-content:space-between;align-items:center;background:#f6faf7;border-radius:12px;padding:7px 10px;margin-bottom:7px}
+.splitRow .control{max-width:134px;min-height:41px}
+.entry{border:1px solid #e2ebe5;border-radius:13px;padding:10px;margin-bottom:7px}
+.entryTop{display:flex;justify-content:space-between;align-items:center;gap:7px}.entryTitle{font-weight:750;word-break:break-word;min-width:0;font-size:15px}
+.entryMeta{color:var(--muted);font-size:14px;line-height:1.4;overflow-wrap:anywhere;margin-top:5px}
+.entryAmt{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:15px}.ledgerActions{display:flex;gap:6px;align-items:center}
+.tag{background:#e7f2eb;color:#2a6b53;border-radius:7px;padding:4px 6px;font-size:12px;font-weight:740;margin-right:6px}
+.tag.game{background:#e7eff9;color:#3a699a}.tag.debt{background:#fff1e0;color:#99672d}.tag.paid{background:#e7f6ed;color:var(--primary)}
+.empty{padding:15px 10px;border:1px dashed #e0e9e2;background:#f9fcfa;border-radius:12px;text-align:center;color:var(--muted);font-size:15px}
+.viewSwitch{display:grid;grid-template-columns:1fr 1fr;background:#ecf3ef;border-radius:12px;padding:3px;gap:3px}
+.viewSwitch button{border:0;border-radius:10px;background:transparent;min-height:41px;font-size:15px;font-weight:760;color:#5b7266}
+.viewSwitch button.active{background:#fff;color:var(--primary);box-shadow:0 1px 5px #142d2310}
+.settleHeading{margin:15px 2px 5px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.settleHeading h2{margin:0;font-size:17px;font-weight:780}.settleHeading .muted{font-size:14px}
+.payRow{display:flex;align-items:center;gap:9px;border-bottom:1px solid #e2ebe5;padding:10px 0;min-height:57px}
+.payRow:last-child{border-bottom:0}.payNames{display:flex;align-items:center;gap:5px;min-width:0;flex:1;font-weight:750;font-size:16px;line-height:1.3}
+.personBubble{min-width:0;overflow-wrap:anywhere}.arrow{color:#6f9586;flex:none}.payAmount{font-weight:850;white-space:nowrap;font-size:17px;font-variant-numeric:tabular-nums}
+.payRow .btn{min-height:36px;padding:7px 11px;font-size:14px;flex:none}
+.net{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}.positive{color:var(--positive)}.negative{color:var(--negative)}
+.matrixScroll{overflow-x:auto;overflow-y:visible;max-width:100%;overscroll-behavior-x:contain;border:1px solid var(--line);border-radius:13px;scrollbar-width:thin}
+.matrix{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+.matrix th,.matrix td{padding:9px 10px;text-align:right;border-bottom:1px solid #e7eee9;white-space:nowrap;min-width:96px;height:48px;background:#fff}
+.matrix thead th{background:#eef5f0;color:#2c5142;font-weight:780;vertical-align:middle;border-bottom:1px solid #d2e5d9;height:62px;position:sticky;top:0;z-index:2}
+.matrix th .matrixMeta{display:block;font-weight:580;color:#687f71;font-size:12px;margin-top:3px;max-width:126px;text-overflow:ellipsis;overflow:hidden}
+.matrix th .matrixLabel{display:block;max-width:126px;overflow:hidden;text-overflow:ellipsis;font-size:14px}
+.matrix th:first-child,.matrix td:first-child{position:sticky;left:0;text-align:left;min-width:90px;max-width:145px;z-index:3;border-right:1px solid var(--line);font-weight:760}
+.matrix th:first-child{z-index:5;background:#eef5f0}
+.matrix th:last-child,.matrix td:last-child{position:sticky;right:0;z-index:3;min-width:96px;font-weight:800;border-left:1px solid #dce9e1;background:#eff7f1}
+.matrix th:last-child{z-index:5;background:#deeee4}
+.matrixPerson{display:block;max-width:104px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.matrix tr:last-child td{border-bottom:0}.matrix .zero{color:#acb9b0}.matrix .groupRow td{background:#f4faf6;font-weight:770;border-top:2px solid #d5e7da}.matrix .groupRow td:first-child{background:#f4faf6}.matrix .groupRow td:last-child{background:#e4f1e8}
+.matrixNote{color:var(--muted);font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 2px 0}
+.clearRow{margin:19px 0 0;display:flex;justify-content:center}.clearRow .btn{color:var(--negative);border:0;background:transparent;font-size:14px}
+.modalBackdrop{position:fixed;inset:0;background:#142d2599;z-index:30;display:grid;place-items:center;padding:14px}
+.modal{background:white;border-radius:20px;padding:20px;width:min(410px,100%)}.modal h2{font-size:21px;margin:0 0 9px}.modal p{font-size:16px;color:var(--muted);line-height:1.5}.modalBtns{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.alert{background:#fff3f2;color:#a63e37;border:1px solid #f3d7d4;border-radius:11px;padding:12px}
+.hidden{display:none!important}#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:50;background:#1c4438;color:white;padding:11px 15px;border-radius:12px;font-size:14px;max-width:92vw;text-align:center;pointer-events:none;opacity:0;transition:opacity .2s}#toast.show{opacity:1}
+@media(max-width:390px){.wrap{padding:9px 9px 30px}.card{padding:11px}.payNames{font-size:15px}.payAmount{font-size:16px}.payRow{gap:6px}.payRow .btn{padding:7px 9px}.personGroup{width:104px}.person .control{padding:7px 6px}.matrix th:first-child,.matrix td:first-child{max-width:90px}.matrix td{padding:8px 8px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="title">收PAY</div></header>
+<nav class="tabs" role="tablist" aria-label="Sections">
+<button class="tab active" type="button" data-tab="people" role="tab" aria-selected="true">People</button>
+<button class="tab" type="button" data-tab="entries" role="tab" aria-selected="false">Entries</button>
+<button class="tab" type="button" data-tab="results" role="tab" aria-selected="false">Settle</button>
+</nav>
+<section id="peoplePanel" class="panel active" role="tabpanel">
+<div class="card"><div class="sectionHead"><h2 class="sectionTitle">Add people</h2><span class="muted tiny" id="peopleCount">0</span></div>
+<div class="inlineAdd"><textarea class="control" id="peopleInput" rows="2" placeholder="A, B, C ..." aria-label="Names, separated by commas or lines"></textarea><button class="btn primary" id="btnAddPeople" type="button">Add</button></div></div>
+<div class="card"><div class="sectionHead"><h2 class="sectionTitle">People & groups</h2></div><div id="peopleList" class="pile"></div><div id="groupPreview" class="groupPreview"></div></div>
+<button class="btn primary fill" type="button" data-go="entries">Continue →</button>
+<div class="clearRow"><button class="btn" type="button" id="btnReset">Clear all data</button></div>
+</section>
+<section id="entriesPanel" class="panel" role="tabpanel">
+<div class="card"><div class="sectionHead"><h2 class="sectionTitle">New entry</h2></div>
+<div class="seg" id="entryModes"><button class="selected" type="button" data-mode="expense">Expense</button><button type="button" data-mode="game">Game</button><button type="button" data-mode="debt">Debt</button><button type="button" data-mode="paid">Paid</button></div><div id="entryForm"></div></div>
+<div class="card"><div class="sectionHead"><h2 class="sectionTitle">Entries</h2><span class="muted tiny" id="entryCount">0</span></div><div id="entryList"></div></div>
+<button class="btn primary fill" type="button" data-go="results">View settlement →</button>
+</section>
+<section id="resultsPanel" class="panel" role="tabpanel">
+<div class="viewSwitch" role="group" aria-label="Settlement view"><button type="button" class="active" data-view="transfers" aria-pressed="true">Transfers</button><button type="button" data-view="matrix" aria-pressed="false">Matrix</button></div>
+<div id="transfersView"><div class="settleHeading"><h2>Suggested transfers</h2><span class="muted" id="transferCount">0 pending</span></div>
+<div class="card"><div id="transferList"></div></div></div>
+<div id="matrixView" class="hidden"><div class="settleHeading"><h2>Breakdown</h2></div><div id="matrixContainer"></div></div>
+</section>
+</div>
+<div id="modalContainer"></div><div id="toast" role="status"></div>
+<script>
+'use strict';
+const STORAGE_KEY='nightsplit_offline_v1';
+const $=id=>document.getElementById(id);
+const h=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=c=>'$'+(Math.abs(c)/100).toLocaleString('en-HK',{minimumFractionDigits:2,maximumFractionDigits:2});
+const signed=c=>(c>0?'+':c<0?'−':'')+fmt(c);
+const id=()=>('id'+Math.random().toString(36).slice(2,10)+Date.now().toString(36));
+const baseState=()=>({version:1,people:[],entries:[]});
+let state=baseState(),tab='people',mode='expense',settleView='transfers';
+let expenseDraft={members:new Set(),custom:false,parts:{},label:'',amount:'',payer:''};
+let gameDraft={members:new Set(),deltas:{},label:''};
+let extraDraft={debt:{label:'',amount:'',from:'',to:''},paid:{label:'',amount:'',from:'',to:''}};
+let toastTimer;
+function toast(s){const el=$('toast');el.textContent=s;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3000)}
+function parseMoney(v,allowNeg=false){const t=String(v??'').trim();if(!new RegExp(allowNeg?'^-?\\d+(?:\\.\\d{1,2})?$':'^\\d+(?:\\.\\d{1,2})?$').test(t))throw Error('Use an amount with up to 2 decimal places');const c=Math.round(Number(t)*100);if(!Number.isSafeInteger(c)||Math.abs(c)>1000000000)throw Error('Amount is too large');if(!allowNeg&&c<=0)throw Error('Enter an amount above zero');return c}
+function name(pid){return state.people.find(p=>p.id===pid)?.name||'Unknown'}
+function validateState(s){if(!s||s.version!==1||!Array.isArray(s.people)||!Array.isArray(s.entries))throw Error('Invalid backup');const ids=new Set();s.people.forEach(p=>{if(!p||typeof p.id!=='string'||typeof p.name!=='string'||!p.name.trim()||ids.has(p.id))throw Error('Invalid people');ids.add(p.id)});s.people.forEach(p=>{if(p.groupWith!=null&&p.groupWith!==''&&(!ids.has(p.groupWith)||p.groupWith===p.id))throw Error('Invalid settlement group')});s.entries.forEach(e=>{if(!e||!['expense','game','debt','paid'].includes(e.type)||typeof e.id!=='string')throw Error('Invalid entry')});return s}
+try{const d=localStorage.getItem(STORAGE_KEY);if(d)state=validateState(JSON.parse(d))}catch(e){console.warn(e)}
+function store(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){toast('Unable to save on this device')}}
+function changed(){store();renderAll()}
+function setTab(x){tab=x;document.querySelectorAll('.tab').forEach(b=>{const a=b.dataset.tab===x;b.classList.toggle('active',a);b.setAttribute('aria-selected',a);b.style.background=a?'#fff':'transparent';b.style.color=a?'#116757':'#5c736b'});['people','entries','results'].forEach(n=>$(n+'Panel').classList.toggle('active',x===n));renderAll();window.scrollTo({top:0,behavior:'smooth'})}
+function resetDraft(){expenseDraft={members:new Set(state.people.map(p=>p.id)),custom:false,parts:{},label:'',amount:'',payer:''};gameDraft={members:new Set(),deltas:{},label:''};extraDraft={debt:{label:'',amount:'',from:'',to:''},paid:{label:'',amount:'',from:'',to:''}}}
+resetDraft();
+function addPeople(raw){const names=raw.split(/[,，、;；\n]+/).map(x=>x.trim()).filter(Boolean);const current=new Set(state.people.map(p=>p.name.toLocaleLowerCase()));let count=0;names.forEach(n=>{if(n.length>40||current.has(n.toLocaleLowerCase()))return;state.people.push({id:id(),name:n,groupWith:''});current.add(n.toLocaleLowerCase());count++});if(!count)throw Error('Add at least one unique name');expenseDraft.members=new Set(state.people.map(p=>p.id));changed();toast(count+' added')}
+function settlementGroups(){const ids=state.people.map(p=>p.id),parent=new Map(ids.map(x=>[x,x]));const root=x=>{while(parent.get(x)!==x){parent.set(x,parent.get(parent.get(x)));x=parent.get(x)}return x};for(const p of state.people)if(p.groupWith&&parent.has(p.groupWith))parent.set(root(p.id),root(p.groupWith));const groups=[];for(const p of state.people){const r=root(p.id);let g=groups.find(x=>x.key===r);if(!g){g={key:r,members:[],representative:p.id};groups.push(g)}g.members.push(p.id)}return groups}
+function groupFor(pid){return settlementGroups().find(g=>g.members.includes(pid))}
+function settlementName(pid){const g=groupFor(pid);return g?g.members.map(name).join(' + '):name(pid)}
+function setGroup(pid,target){const p=state.people.find(p=>p.id===pid);if(!p||target===pid||target&&!state.people.some(q=>q.id===target))return;const g=groupFor(pid);const remaining=g.members.filter(x=>x!==pid);remaining.forEach((rid,i)=>{state.people.find(x=>x.id===rid).groupWith=i===0?'':remaining[0]});p.groupWith='';if(target){const to=groupFor(target);p.groupWith=to.representative}changed()}
+function renderPeople(){ $('peopleCount').textContent=String(state.people.length);const groups=settlementGroups();$('peopleList').innerHTML=state.people.length?state.people.map((p,i)=>{const g=groups.find(x=>x.members.includes(p.id));const mate=g.members.find(x=>x!==p.id)||'';return `<div class="person"><span class="avatar">${i+1}</span><input class="control personName" aria-label="Name" data-rename="${h(p.id)}" value="${h(p.name)}" maxlength="40"><select class="control personGroup" aria-label="Settlement group for ${h(p.name)}" data-group="${h(p.id)}"><option value="">Solo</option>${state.people.filter(x=>x.id!==p.id).map(x=>`<option value="${h(x.id)}" ${mate===x.id?'selected':''}>With ${h(x.name)}</option>`).join('')}</select><button class="iconBtn" data-remove-person="${h(p.id)}" title="Remove" aria-label="Remove ${h(p.name)}">×</button></div>`}).join(''):'<div class="empty">Add names to begin</div>';$('groupPreview').innerHTML=groups.filter(g=>g.members.length>1).map(g=>`<span class="groupTag">${h(g.members.map(name).join(' + '))}</span>`).join('')}
+function peopleOptions(selected){return '<option value="">Choose person</option>'+state.people.map(p=>`<option value="${h(p.id)}" ${selected===p.id?'selected':''}>${h(p.name)}</option>`).join('')}
+function chips(selected,data='members'){return `<div class="chips">${state.people.map(p=>`<button type="button" class="chip ${selected.has(p.id)?'selected':''}" data-${data}="${h(p.id)}"><span class="check">${selected.has(p.id)?'✓':'＋'}</span>${h(p.name)}</button>`).join('')}</div>`}
+function modeHtml(){if(state.people.length<2)return '<div class="empty" style="margin-top:12px">Add at least 2 people first</div>';if(mode==='expense')return `<div class="grid2"><label class="field"><span>Item</span><input class="control" id="eLabel" placeholder="Dinner" maxlength="60" value="${h(expenseDraft.label)}"></label><label class="field"><span>Amount (HKD)</span><input class="control" id="eAmount" inputmode="decimal" placeholder="800" value="${h(expenseDraft.amount)}"></label></div><label class="field"><span>Paid by</span><select class="control" id="ePayer">${peopleOptions(expenseDraft.payer)}</select></label><div class="field"><div class="row" style="justify-content:space-between"><span class="fieldTitle" style="margin:0">Split among</span><div><button class="btn small" type="button" data-quick-select="all">All</button> <button class="btn small" type="button" data-quick-select="none">None</button></div></div>${chips(expenseDraft.members,'member')}</div><div class="optionSwitch"><label for="customSplit">Custom amounts</label><input id="customSplit" type="checkbox" ${expenseDraft.custom?'checked':''}></div><div id="customFields">${customHtml()}</div><button type="button" class="btn primary fill" id="btnAddEntry" style="margin-top:13px">Add expense</button>`;
+if(mode==='game')return `<label class="field"><span>Game</span><input class="control" id="gLabel" placeholder="Game 1 / Poker" maxlength="60" value="${h(gameDraft.label)}"></label><div class="field"><div class="row" style="justify-content:space-between"><span class="fieldTitle" style="margin:0">Players</span><button class="btn small" type="button" data-quick-game="all">All</button></div>${chips(gameDraft.members,'gmember')}</div><div id="gameFields">${gameFieldsHtml()}</div><button class="btn primary fill" type="button" id="btnAddEntry" style="margin-top:13px">Add game result</button>`;
+const isPaid=mode==='paid';return `<label class="field"><span>Note</span><input class="control" id="xLabel" maxlength="60" value="${h(extraDraft[mode].label)}" placeholder="${isPaid?'FPS / Cash':'Adjustment'}"></label><div class="grid2"><label class="field"><span>${isPaid?'From':'Owes'}</span><select class="control" id="xFrom">${peopleOptions(extraDraft[mode].from)}</select></label><label class="field"><span>${isPaid?'To':'Receives'}</span><select class="control" id="xTo">${peopleOptions(extraDraft[mode].to)}</select></label></div><label class="field"><span>Amount (HKD)</span><input class="control" id="xAmount" inputmode="decimal" placeholder="100" value="${h(extraDraft[mode].amount)}"></label><button class="btn primary fill" type="button" id="btnAddEntry">${isPaid?'Record payment':'Add debt'}</button>`}
+function customHtml(){if(!expenseDraft.custom)return '';return [...expenseDraft.members].map(pid=>`<div class="splitRow"><strong>${h(name(pid))}</strong><input class="control" data-part="${h(pid)}" inputmode="decimal" placeholder="0.00" value="${h(expenseDraft.parts[pid]??'')}"></div>`).join('')}
+function gameFieldsHtml(){if(!gameDraft.members.size)return '<div class="empty">Choose players to enter winnings (+) and losses (−)</div>';return [...gameDraft.members].map(pid=>`<div class="splitRow"><strong>${h(name(pid))}</strong><input class="control" data-delta="${h(pid)}" inputmode="decimal" placeholder="+150 / -50" value="${h(gameDraft.deltas[pid]??'')}"></div>`).join('')}
+function renderForm(){document.querySelectorAll('#entryModes button').forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));$('entryForm').innerHTML=modeHtml()}
+function validateRefs(e){const allowed=new Set(state.people.map(p=>p.id));if(e.type==='expense'){if(!allowed.has(e.payer)||!Array.isArray(e.members)||!e.members.length||e.members.some(pid=>!allowed.has(pid)))throw Error('Select payer and participants');if(!Number.isSafeInteger(e.amount)||e.amount<=0)throw Error('Invalid expense amount');if(e.parts&& (e.parts.length!==e.members.length||e.parts.some(x=>!Number.isSafeInteger(x)||x<0)||e.parts.reduce((a,b)=>a+b,0)!==e.amount))throw Error('Split does not match total')}else if(e.type==='game'){const pairs=Object.entries(e.deltas||{});if(pairs.some(([pid,c])=>!allowed.has(pid)||!Number.isSafeInteger(c)))throw Error('Invalid game result');if(pairs.reduce((sum,[,v])=>sum+v,0)!==0)throw Error('Game totals must equal $0')}else {if(!allowed.has(e.from)||!allowed.has(e.to)||e.from===e.to||!Number.isSafeInteger(e.amount)||e.amount<=0)throw Error('Select valid people and amount')}}
+function addEntry(){let e={id:id(),type:mode,label:'',time:Date.now()};if(mode==='expense'){e.label=$('eLabel').value.trim()||'Expense';e.amount=parseMoney($('eAmount').value);e.payer=$('ePayer').value;e.members=state.people.map(p=>p.id).filter(pid=>expenseDraft.members.has(pid));if(!e.members.length)throw Error('Select who shares this expense');if(expenseDraft.custom){e.parts=e.members.map(pid=>parseMoney(expenseDraft.parts[pid]??'0',true));if(e.parts.some(n=>n<0))throw Error('Split amounts cannot be negative');if(e.parts.reduce((a,b)=>a+b,0)!==e.amount)throw Error('Split must total '+fmt(e.amount))}}
+if(mode==='game'){e.label=$('gLabel').value.trim()||'Game';const list=[...gameDraft.members];if(list.length<2)throw Error('Choose at least 2 players');e.deltas={};for(const pid of list){const val=(gameDraft.deltas[pid]??'').trim();e.deltas[pid]=val?parseMoney(val,true):0}if(Object.values(e.deltas).every(n=>n===0))throw Error('Enter game results');if(Object.values(e.deltas).reduce((a,b)=>a+b,0)!==0)throw Error('Game totals must equal $0')}
+if(mode==='debt'||mode==='paid'){e.label=$('xLabel').value.trim()||(mode==='paid'?'Payment':'Debt');e.amount=parseMoney($('xAmount').value);e.from=$('xFrom').value;e.to=$('xTo').value}
+validateRefs(e);state.entries.push(e);resetDraft();changed();toast('Entry added')}
+function expensesParts(e){if(Array.isArray(e.parts))return e.parts;const base=Math.floor(e.amount/e.members.length),rem=e.amount%e.members.length;return e.members.map((_,i)=>base+(i<rem?1:0))}
+function compute(){const rows=Object.fromEntries(state.people.map(p=>[p.id,{expense:0,game:0,debt:0,paid:0,net:0}]));const add=(pid,k,c)=>{if(!rows[pid])throw Error('Missing person in entry');rows[pid][k]+=c;rows[pid].net+=c};let sumPaid=0;for(const e of state.entries){validateRefs(e);if(e.type==='expense'){add(e.payer,'expense',e.amount);expensesParts(e).forEach((c,i)=>add(e.members[i],'expense',-c))}else if(e.type==='game'){Object.entries(e.deltas).forEach(([pid,c])=>add(pid,'game',c))}else if(e.type==='debt'){add(e.from,'debt',-e.amount);add(e.to,'debt',e.amount)}else if(e.type==='paid'){add(e.from,'paid',e.amount);add(e.to,'paid',-e.amount);sumPaid+=e.amount}}const nets=Object.entries(rows).map(([pid,r])=>({pid,c:r.net}));if(nets.reduce((a,b)=>a+b.c,0)!==0)throw Error('Entries are not balanced');const groups=settlementGroups().map(g=>({...g,c:g.members.reduce((sum,pid)=>sum+rows[pid].net,0)}));const debtors=groups.filter(x=>x.c<0).map(x=>({pid:x.representative,c:-x.c})).sort((a,b)=>b.c-a.c),creditors=groups.filter(x=>x.c>0).map(x=>({pid:x.representative,c:x.c})).sort((a,b)=>b.c-a.c);const transfers=[];let i=0,j=0;while(i<debtors.length&&j<creditors.length){const amount=Math.min(debtors[i].c,creditors[j].c);if(amount<=0)break;transfers.push({from:debtors[i].pid,to:creditors[j].pid,amount});debtors[i].c-=amount;creditors[j].c-=amount;if(!debtors[i].c)i++;if(!creditors[j].c)j++}if(i<debtors.length||j<creditors.length)throw Error('Unable to balance transfers');return{rows,groups,transfers,outstanding:groups.filter(x=>x.c>0).reduce((a,b)=>a+b.c,0),sumPaid}}
+function entryDetails(e){if(e.type==='expense'){const portions=expensesParts(e);return `${name(e.payer)} paid · ${e.members.map((pid,i)=>`${name(pid)} ${fmt(portions[i])}`).join(', ')}`}if(e.type==='game')return Object.entries(e.deltas).map(([pid,c])=>`${name(pid)} ${signed(c)}`).join(', ');return `${name(e.from)} → ${name(e.to)}`}
+function renderEntries(){const tags={expense:'Expense',game:'Game',debt:'Debt',paid:'Paid'};$('entryCount').textContent=String(state.entries.length);$('entryList').innerHTML=state.entries.length?state.entries.slice().reverse().map(e=>`<div class="entry"><div class="entryTop"><div class="entryTitle"><span class="tag ${e.type}">${tags[e.type]}</span>${h(e.label)}</div><div class="ledgerActions">${e.amount?`<span class="entryAmt">${fmt(e.amount)}</span>`:''}<button class="iconBtn" data-remove-entry="${h(e.id)}" title="Delete entry" aria-label="Delete entry">×</button></div></div><div class="entryMeta">${h(entryDetails(e))}</div></div>`).join(''):'<div class="empty">No entries yet</div>'}
+function detailOfRow(r){return [['Game',r.game],['Expense',r.expense],['Debt',r.debt],['Paid',r.paid]].filter(([,v])=>v!==0).map(([k,v])=>`${k} ${signed(v)}`).join(' · ')}
+function entryEffect(e,pid){
+  if(e.type==='game')return e.deltas[pid]||0;
+  if(e.type==='expense'){
+    let c=e.payer===pid?e.amount:0;
+    e.members.forEach((p,i)=>{if(p===pid)c-=expensesParts(e)[i]});return c;
+  }
+  if(e.type==='debt')return (e.to===pid?e.amount:0)-(e.from===pid?e.amount:0);
+  if(e.type==='paid')return (e.from===pid?e.amount:0)-(e.to===pid?e.amount:0);
+  return 0;
+}
+function shortSigned(c){if(!c)return '<span class="zero">—</span>';const n=(Math.abs(c)/100).toLocaleString('en-HK',{maximumFractionDigits:2});return `<span class="${c>0?'positive':'negative'}">${c>0?'+':'−'}$${n}</span>`}
+function renderMatrix(rows,groups){
+  const container=$('matrixContainer');
+  if(!state.people.length){container.innerHTML='<div class="empty">Add people to begin</div>';return;}
+  const entries=state.entries;
+  const labels={expense:'Expense',game:'Game',debt:'Debt',paid:'Paid'};
+  const headers=entries.map(e=>{
+    const detail=e.type==='expense'?`${name(e.payer)} paid`:e.type==='paid'||e.type==='debt'?`${name(e.from)} → ${name(e.to)}`:labels[e.type];
+    return `<th title="${h(e.label)} · ${h(detail)}"><span class="matrixLabel">${h(e.label)}</span><span class="matrixMeta">${h(detail)}</span></th>`;
+  }).join('');
+  const renderRow=(label,pids,group=false)=>{
+    const net=pids.reduce((a,pid)=>a+rows[pid].net,0);
+    const cells=entries.map(e=>`<td>${shortSigned(pids.reduce((a,pid)=>a+entryEffect(e,pid),0))}</td>`).join('');
+    return `<tr class="${group?'groupRow':''}"><td title="${h(label)}"><span class="matrixPerson">${h(label)}</span></td>${cells}<td>${shortSigned(net)}</td></tr>`;
+  };
+  const peopleRows=state.people.map(p=>renderRow(p.name,[p.id])).join('');
+  const groupRows=groups.filter(g=>g.members.length>1).map(g=>renderRow(g.members.map(name).join(' + '),g.members,true)).join('');
+  container.innerHTML=`<div class="matrixScroll" role="region" aria-label="Settlement breakdown matrix" tabindex="0"><table class="matrix"><thead><tr><th>Person</th>${headers}<th>Net</th></tr></thead><tbody>${peopleRows}${groupRows}</tbody></table></div><div class="matrixNote"><span>+ Credit · − Owed</span><span>Swipe ↔</span></div>`;
+}
+function renderResults(){
+  let data;try{data=compute()}catch(err){$('transferList').innerHTML=$('matrixContainer').innerHTML=`<div class="alert">${h(err.message)}</div>`;return;}
+  const {rows,groups,transfers}=data;
+  $('transferCount').textContent=transfers.length+' pending';
+  $('transferList').innerHTML=transfers.length?transfers.map((t,i)=>`<div class="payRow"><div class="payNames"><span class="personBubble">${h(settlementName(t.from))}</span><span class="arrow">→</span><span class="personBubble">${h(settlementName(t.to))}</span></div><span class="payAmount">${fmt(t.amount)}</span><button class="btn primary small" data-fully="${i}" type="button" aria-label="Mark ${h(settlementName(t.from))} to ${h(settlementName(t.to))} ${fmt(t.amount)} as paid">Paid</button></div>`).join(''):`<div class="empty">${state.people.length?'All settled ✓':'Add people and entries to begin'}</div>`;
+  renderMatrix(rows,groups);
+}
+function setSettleView(view){settleView=view;document.querySelectorAll('[data-view]').forEach(b=>{const on=b.dataset.view===view;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});$('transfersView').classList.toggle('hidden',view!=='transfers');$('matrixView').classList.toggle('hidden',view!=='matrix')}
+
+function renderAll(){renderPeople();renderForm();renderEntries();renderResults()}
+function confirmBox(title,message,affirm='Confirm',danger=false){return new Promise(resolve=>{const target=$('modalContainer');target.innerHTML=`<div class="modalBackdrop"><div class="modal" role="dialog" aria-modal="true"><h2>${h(title)}</h2><p>${h(message)}</p><div class="modalBtns"><button class="btn" id="modalCancel">Cancel</button><button class="btn ${danger?'danger':'primary'}" id="modalConfirm">${h(affirm)}</button></div></div></div>`;const done=x=>{target.innerHTML='';resolve(x)};$('modalCancel').onclick=()=>done(false);$('modalConfirm').onclick=()=>done(true);target.firstElementChild.addEventListener('click',e=>{if(e.target===target.firstElementChild)done(false)})})}
+async function deleteEntry(eid){const e=state.entries.find(x=>x.id===eid);if(!e)return;if(!await confirmBox('Delete entry?',e.label+' will be removed.','Delete',true))return;state.entries=state.entries.filter(x=>x.id!==eid);changed();toast('Entry deleted')}
+async function removePerson(pid){const p=state.people.find(x=>x.id===pid);if(!p)return;const refs=state.entries.some(e=>e.payer===pid||e.from===pid||e.to===pid||e.members?.includes(pid)||Object.hasOwn(e.deltas||{},pid));if(refs){toast('Delete entries for this person first');return}if(!await confirmBox('Remove person?',`Remove ${p.name}?`,'Remove',true))return;setGroup(pid,'');state.people=state.people.filter(x=>x.id!==pid);resetDraft();changed()}
+function recordPaid(t){const e={id:id(),type:'paid',label:'Settlement',time:Date.now(),from:t.from,to:t.to,amount:t.amount};validateRefs(e);state.entries.push(e);changed();toast('Payment recorded · '+fmt(t.amount))}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.go)));
+$('btnAddPeople').addEventListener('click',()=>{try{addPeople($('peopleInput').value);$('peopleInput').value=''}catch(e){toast(e.message)}});
+$('peopleInput').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')$('btnAddPeople').click()});
+$('peopleList').addEventListener('change',e=>{const group=e.target.dataset.group;if(group){setGroup(group,e.target.value);return}const pid=e.target.dataset.rename;if(!pid)return;const p=state.people.find(x=>x.id===pid);if(!p)return;const n=e.target.value.trim();if(!n||state.people.some(x=>x.id!==pid&&x.name.toLowerCase()===n.toLowerCase())){e.target.value=p.name;toast('Name cannot be empty or duplicate');return}p.name=n;changed()});
+$('peopleList').addEventListener('click',e=>{const btn=e.target.closest('[data-remove-person]');if(btn)removePerson(btn.dataset.removePerson)});
+$('entryModes').addEventListener('click',e=>{const m=e.target.closest('[data-mode]')?.dataset.mode;if(m){mode=m;renderForm()}});
+$('entryForm').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='btnAddEntry'){try{addEntry()}catch(error){toast(error.message)}return}if(b.dataset.member){if(expenseDraft.members.has(b.dataset.member))expenseDraft.members.delete(b.dataset.member);else expenseDraft.members.add(b.dataset.member);renderForm();return}if(b.dataset.gmember){if(gameDraft.members.has(b.dataset.gmember))gameDraft.members.delete(b.dataset.gmember);else gameDraft.members.add(b.dataset.gmember);renderForm();return}if(b.dataset.quickSelect){expenseDraft.members=new Set(b.dataset.quickSelect==='all'?state.people.map(p=>p.id):[]);renderForm();return}if(b.dataset.quickGame){gameDraft.members=new Set(state.people.map(p=>p.id));renderForm()}});
+function syncField(el){const k=el.id,v=el.value;if(k==='eLabel')expenseDraft.label=v;else if(k==='eAmount')expenseDraft.amount=v;else if(k==='ePayer')expenseDraft.payer=v;else if(k==='gLabel')gameDraft.label=v;else if(k==='xLabel')extraDraft[mode].label=v;else if(k==='xAmount')extraDraft[mode].amount=v;else if(k==='xFrom')extraDraft[mode].from=v;else if(k==='xTo')extraDraft[mode].to=v}
+$('entryForm').addEventListener('change',e=>{syncField(e.target);if(e.target.id==='customSplit'){expenseDraft.custom=e.target.checked;const el=$('customFields');if(el)el.innerHTML=customHtml()}});
+$('entryForm').addEventListener('input',e=>{syncField(e.target);if(e.target.dataset.part)expenseDraft.parts[e.target.dataset.part]=e.target.value;if(e.target.dataset.delta)gameDraft.deltas[e.target.dataset.delta]=e.target.value});
+$('entryList').addEventListener('click',e=>{const b=e.target.closest('[data-remove-entry]');if(b)deleteEntry(b.dataset.removeEntry)});
+$('transferList').addEventListener('click',e=>{const b=e.target.closest('[data-fully]');if(!b)return;const t=compute().transfers[Number(b.dataset.fully)];if(t)recordPaid(t)});
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setSettleView(b.dataset.view)));
+$('btnReset').addEventListener('click',async()=>{if(!await confirmBox('Reset all data?','Delete people, entries, and payments from this device?','Reset',true))return;state=baseState();resetDraft();changed();setTab('people');toast('Reset complete')});
+renderAll();
+setSettleView(settleView);
+</script>
+</body>
+</html>
