@@ -4,15 +4,30 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f7f6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="收PAY">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <title>收PAY</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;650;700;750;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:GRAD,opsz,ROND,wdth,wght@0,18,100,100,400..900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4f7f5;--surface:#fff;--ink:#152920;--muted:#617369;--line:#dce8e0;--primary:#156d5d;--soft:#e8f3ed;--positive:#187658;--negative:#c1534d}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Google Sans Flex',Roboto,Arial,sans-serif;font-size:16px;line-height:1.35;-webkit-font-smoothing:antialiased}
+@font-face{font-family:'JF Open Huninn';src:url('https://cdn.jsdelivr.net/gh/justfont/open-huninn-font@master/font/jf-openhuninn-2.1.ttf') format('truetype');font-display:swap}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Google Sans Flex','JF Open Huninn',Roboto,Arial,sans-serif;font-size:16px;line-height:1.35;-webkit-font-smoothing:antialiased;font-variation-settings:'ROND' 100,'opsz' 18}
+button,input,textarea,select{font-variation-settings:'ROND' 100,'opsz' 18}
 button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}
 .wrap{max-width:680px;margin:auto;padding:10px 12px 36px}
-.top{padding:4px 3px 8px;display:flex;align-items:center;justify-content:space-between}
+.top{padding:4px 0 9px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;min-height:49px}
+.brand{display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;min-width:0}
+.brandEmoji{font-size:24px;line-height:1}
+.langSwitch{justify-self:end;display:flex;align-items:center;gap:2px;padding:3px;background:#e4eee8;border-radius:12px}
+.langBtn{border:0;background:transparent;border-radius:9px;padding:5px 8px;min-height:31px;font-size:13px;font-weight:750;color:#526a60}
+.langBtn.selected{background:#fff;color:var(--primary);box-shadow:0 1px 4px #123e3218}
+.langBtn:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media(max-width:350px){.title{font-size:20px}.brandEmoji{font-size:21px}.langBtn{padding:5px 6px}}
 .title{font-size:23px;font-weight:800;letter-spacing:-.5px}
 .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 12px;background:#e5eee9;border-radius:16px;position:sticky;top:0;z-index:10}
 .tab{border:0;border-radius:12px;background:transparent;min-height:43px;font-size:16px;font-weight:750;color:#516c61}
@@ -85,7 +100,7 @@ button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}bu
 </head>
 <body>
 <div class="wrap">
-<header class="top"><div class="title">收PAY</div></header>
+<header class="top"><div aria-hidden="true"></div><div class="brand"><span class="brandEmoji" aria-hidden="true">💸</span><div class="title">收PAY</div></div><div class="langSwitch" role="group" aria-label="Language"><button class="langBtn selected" data-lang="en" type="button" aria-pressed="true">EN</button><button class="langBtn" data-lang="zh" type="button" aria-pressed="false">中</button></div></header>
 <nav class="tabs" role="tablist" aria-label="Sections">
 <button class="tab active" type="button" data-tab="people" role="tab" aria-selected="true">People</button>
 <button class="tab" type="button" data-tab="entries" role="tab" aria-selected="false">Entries</button>
@@ -114,6 +129,111 @@ button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}bu
 <div id="modalContainer"></div><div id="toast" role="status"></div>
 <script>
 'use strict';
+const localeKey='showpay_language_v1';
+let language='en';
+try{language=localStorage.getItem(localeKey)==='zh'?'zh':'en'}catch{}
+const zhMap={
+ 'Language':'語言','Sections':'分頁','People':'人員','Entries':'帳目','Settle':'找數',
+ 'Add people':'加入人員','People & groups':'人員及分組','Add':'新增',
+ 'Continue →':'下一步 →','Clear all data':'清除所有資料','New entry':'新增帳目',
+ 'Expense':'開支','Game':'遊戲','Debt':'欠款','Paid':'已付',
+ 'View settlement →':'查看找數 →','Transfers':'過數','Matrix':'明細表',
+ 'Suggested transfers':'建議過數','Breakdown':'收支明細','Item':'項目',
+ 'Amount (HKD)':'金額 (HKD)','Paid by':'付款人','Split among':'分攤人',
+ 'All':'全選','None':'清除','Custom amounts':'自訂金額','Add expense':'加入開支',
+ 'Players':'玩家','Add game result':'加入遊戲結果','Note':'備註','From':'付款人','To':'收款人',
+ 'Owes':'欠款人','Receives':'收款人','Record payment':'記錄已過數','Add debt':'加入欠款',
+ 'Solo':'個人','Choose person':'選擇人員','Choose players to enter winnings (+) and losses (−)':'選擇玩家，再輸入贏 (+) 或輸 (−) 的金額',
+ 'Add at least 2 people first':'請先加入最少兩個人','Add names to begin':'加入名字開始',
+ 'No entries yet':'暫無帳目','Person':'人員','Net':'淨額','+ Credit · − Owed':'+ 應收 · − 應付',
+ 'Swipe ↔':'左右滑動 ↔','All settled ✓':'全部已清 ✓','Add people and entries to begin':'先加入人員同帳目',
+ 'Settlement breakdown matrix':'找數明細矩陣','Paid':'已付','Unknown':'未知',
+ 'Remove':'移除','Remove person?':'移除人員？','Delete entry?':'刪除帳目？','Delete':'刪除',
+ 'Cancel':'取消','Confirm':'確認','Reset':'清除','Reset all data?':'清除所有資料？',
+ 'Delete people, entries, and payments from this device?':'刪除呢部裝置上所有人員、帳目及過數紀錄？',
+ 'Delete entries for this person first':'請先刪除涉及此人嘅帳目',
+ 'Name cannot be empty or duplicate':'名稱唔可以留空或重複',
+ 'Unable to save on this device':'無法喺呢部裝置儲存',
+ 'Use an amount with up to 2 decimal places':'金額最多只可以有兩位小數',
+ 'Amount is too large':'金額過大','Enter an amount above zero':'請輸入大於零嘅金額',
+ 'Add at least one unique name':'請輸入最少一個新名字',
+ 'Select payer and participants':'請選擇付款人同分攤人員',
+ 'Invalid expense amount':'開支金額不正確','Split does not match total':'分攤金額同總額不符',
+ 'Invalid game result':'遊戲輸贏金額不正確','Game totals must equal $0':'遊戲輸贏合計必須等於 $0',
+ 'Select valid people and amount':'請選擇正確人員及金額',
+ 'Select who shares this expense':'請選擇分攤人員',
+ 'Split amounts cannot be negative':'分攤金額唔可以係負數',
+ 'Choose at least 2 players':'請選擇最少兩名玩家',
+ 'Enter game results':'請輸入遊戲輸贏','Entry added':'已加入帳目','Entry deleted':'已刪除帳目',
+ 'Reset complete':'已清除所有資料','Invalid entry':'帳目資料不正確',
+ 'Entries are not balanced':'帳目總數唔平衡','Unable to balance transfers':'無法完成找數計算',
+ 'FPS / Cash':'轉數快／現金','Adjustment':'調整','Dinner':'晚餐',
+ 'Game 1 / Poker':'遊戲 1／Poker','Name':'名字','Remove':'移除','Delete entry':'刪除帳目',
+ 'Settlement':'找數','Payment':'已付款','Settle':'找數'
+};
+const sourceTexts=new WeakMap();
+const sourceAttrs=new WeakMap();
+function translateText(en){
+ const text=String(en),trim=text.trim();
+ let tr=zhMap[trim];
+ if(!tr){
+  let m;
+  if((m=/^With (.+)$/.exec(trim)))tr='與 '+m[1]+' 同組';
+  else if((m=/^(\d+) pending$/.exec(trim)))tr=m[1]+' 筆待過數';
+  else if((m=/^(\d+) added$/.exec(trim)))tr='已加入 '+m[1]+' 人';
+  else if((m=/^Remove (.+)\?$/.exec(trim)))tr='移除 '+m[1]+'？';
+  else if((m=/^(.+) will be removed\.$/.exec(trim)))tr=m[1]+' 將被刪除。';
+  else if((m=/^Mark (.+) as paid$/.exec(trim)))tr='標記 '+m[1]+' 已付';
+  else if((m=/^Payment recorded · (.+)$/.exec(trim)))tr='已記錄過數 · '+m[1];
+  else if((m=/^Split must total (.+)$/.exec(trim)))tr='分攤總額必須等於 '+m[1];
+  else if((m=/^(.+) paid$/.exec(trim)))tr=m[1]+' 已付款';
+  else if(trim.includes(' paid · '))tr=trim.replace(' paid · ',' 已付款 · ');
+  else return text;
+ }
+ return text.replace(trim,tr);
+}
+function translateNodeText(n){
+ const old=sourceTexts.get(n);
+ const original=old&&n.nodeValue===old.shown?old.original:n.nodeValue;
+ if(!original||!original.trim())return;
+ const shown=language==='zh'?translateText(original):original;
+ if(n.nodeValue!==shown)n.nodeValue=shown;
+ sourceTexts.set(n,{original,shown});
+}
+function translateAttributes(el){
+ const saved=sourceAttrs.get(el)||{};
+ for(const attr of ['placeholder','aria-label','title']){
+  if(!el.hasAttribute(attr))continue;
+  const current=el.getAttribute(attr),old=saved[attr];
+  const original=old&&current===old.shown?old.original:current;
+  const shown=language==='zh'?translateText(original):original;
+  if(current!==shown)el.setAttribute(attr,shown);
+  saved[attr]={original,shown};
+ }
+ sourceAttrs.set(el,saved);
+}
+function localizePage(){
+ document.documentElement.lang=language==='zh'?'zh-Hant':'en';
+ document.querySelectorAll('[data-lang]').forEach(el=>{
+  const active=el.dataset.lang===language;
+  el.classList.toggle('selected',active);el.setAttribute('aria-pressed',String(active));
+ });
+ const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ let node;
+ while((node=walker.nextNode())){
+  const parent=node.parentElement;
+  if(!parent||parent.closest('script,style,.personBubble,.groupTag,.matrixPerson,.matrixLabel')||
+     (parent.classList.contains('entryTitle')&&!parent.classList.contains('tag')))continue;
+  translateNodeText(node);
+ }
+ document.querySelectorAll('[placeholder],[aria-label],[title]').forEach(translateAttributes);
+}
+function setLanguage(next){
+ language=next==='zh'?'zh':'en';
+ try{localStorage.setItem(localeKey,language)}catch{}
+ localizePage();
+}
+document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.lang)));
 const STORAGE_KEY='nightsplit_offline_v1';
 const $=id=>document.getElementById(id);
 const h=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -126,7 +246,7 @@ let expenseDraft={members:new Set(),custom:false,parts:{},label:'',amount:'',pay
 let gameDraft={members:new Set(),deltas:{},label:''};
 let extraDraft={debt:{label:'',amount:'',from:'',to:''},paid:{label:'',amount:'',from:'',to:''}};
 let toastTimer;
-function toast(s){const el=$('toast');el.textContent=s;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3000)}
+function toast(s){const el=$('toast');el.textContent=language==='zh'?translateText(s):s;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3000)}
 function parseMoney(v,allowNeg=false){const t=String(v??'').trim();if(!new RegExp(allowNeg?'^-?\\d+(?:\\.\\d{1,2})?$':'^\\d+(?:\\.\\d{1,2})?$').test(t))throw Error('Use an amount with up to 2 decimal places');const c=Math.round(Number(t)*100);if(!Number.isSafeInteger(c)||Math.abs(c)>1000000000)throw Error('Amount is too large');if(!allowNeg&&c<=0)throw Error('Enter an amount above zero');return c}
 function name(pid){return state.people.find(p=>p.id===pid)?.name||'Unknown'}
 function validateState(s){if(!s||s.version!==1||!Array.isArray(s.people)||!Array.isArray(s.entries))throw Error('Invalid backup');const ids=new Set();s.people.forEach(p=>{if(!p||typeof p.id!=='string'||typeof p.name!=='string'||!p.name.trim()||ids.has(p.id))throw Error('Invalid people');ids.add(p.id)});s.people.forEach(p=>{if(p.groupWith!=null&&p.groupWith!==''&&(!ids.has(p.groupWith)||p.groupWith===p.id))throw Error('Invalid settlement group')});s.entries.forEach(e=>{if(!e||!['expense','game','debt','paid'].includes(e.type)||typeof e.id!=='string')throw Error('Invalid entry')});return s}
@@ -149,7 +269,7 @@ if(mode==='game')return `<label class="field"><span>Game</span><input class="con
 const isPaid=mode==='paid';return `<label class="field"><span>Note</span><input class="control" id="xLabel" maxlength="60" value="${h(extraDraft[mode].label)}" placeholder="${isPaid?'FPS / Cash':'Adjustment'}"></label><div class="grid2"><label class="field"><span>${isPaid?'From':'Owes'}</span><select class="control" id="xFrom">${peopleOptions(extraDraft[mode].from)}</select></label><label class="field"><span>${isPaid?'To':'Receives'}</span><select class="control" id="xTo">${peopleOptions(extraDraft[mode].to)}</select></label></div><label class="field"><span>Amount (HKD)</span><input class="control" id="xAmount" inputmode="decimal" placeholder="100" value="${h(extraDraft[mode].amount)}"></label><button class="btn primary fill" type="button" id="btnAddEntry">${isPaid?'Record payment':'Add debt'}</button>`}
 function customHtml(){if(!expenseDraft.custom)return '';return [...expenseDraft.members].map(pid=>`<div class="splitRow"><strong>${h(name(pid))}</strong><input class="control" data-part="${h(pid)}" inputmode="decimal" placeholder="0.00" value="${h(expenseDraft.parts[pid]??'')}"></div>`).join('')}
 function gameFieldsHtml(){if(!gameDraft.members.size)return '<div class="empty">Choose players to enter winnings (+) and losses (−)</div>';return [...gameDraft.members].map(pid=>`<div class="splitRow"><strong>${h(name(pid))}</strong><input class="control" data-delta="${h(pid)}" inputmode="decimal" placeholder="+150 / -50" value="${h(gameDraft.deltas[pid]??'')}"></div>`).join('')}
-function renderForm(){document.querySelectorAll('#entryModes button').forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));$('entryForm').innerHTML=modeHtml()}
+function renderForm(){document.querySelectorAll('#entryModes button').forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));$('entryForm').innerHTML=modeHtml();localizePage()}
 function validateRefs(e){const allowed=new Set(state.people.map(p=>p.id));if(e.type==='expense'){if(!allowed.has(e.payer)||!Array.isArray(e.members)||!e.members.length||e.members.some(pid=>!allowed.has(pid)))throw Error('Select payer and participants');if(!Number.isSafeInteger(e.amount)||e.amount<=0)throw Error('Invalid expense amount');if(e.parts&& (e.parts.length!==e.members.length||e.parts.some(x=>!Number.isSafeInteger(x)||x<0)||e.parts.reduce((a,b)=>a+b,0)!==e.amount))throw Error('Split does not match total')}else if(e.type==='game'){const pairs=Object.entries(e.deltas||{});if(pairs.some(([pid,c])=>!allowed.has(pid)||!Number.isSafeInteger(c)))throw Error('Invalid game result');if(pairs.reduce((sum,[,v])=>sum+v,0)!==0)throw Error('Game totals must equal $0')}else {if(!allowed.has(e.from)||!allowed.has(e.to)||e.from===e.to||!Number.isSafeInteger(e.amount)||e.amount<=0)throw Error('Select valid people and amount')}}
 function addEntry(){let e={id:id(),type:mode,label:'',time:Date.now()};if(mode==='expense'){e.label=$('eLabel').value.trim()||'Expense';e.amount=parseMoney($('eAmount').value);e.payer=$('ePayer').value;e.members=state.people.map(p=>p.id).filter(pid=>expenseDraft.members.has(pid));if(!e.members.length)throw Error('Select who shares this expense');if(expenseDraft.custom){e.parts=e.members.map(pid=>parseMoney(expenseDraft.parts[pid]??'0',true));if(e.parts.some(n=>n<0))throw Error('Split amounts cannot be negative');if(e.parts.reduce((a,b)=>a+b,0)!==e.amount)throw Error('Split must total '+fmt(e.amount))}}
 if(mode==='game'){e.label=$('gLabel').value.trim()||'Game';const list=[...gameDraft.members];if(list.length<2)throw Error('Choose at least 2 players');e.deltas={};for(const pid of list){const val=(gameDraft.deltas[pid]??'').trim();e.deltas[pid]=val?parseMoney(val,true):0}if(Object.values(e.deltas).every(n=>n===0))throw Error('Enter game results');if(Object.values(e.deltas).reduce((a,b)=>a+b,0)!==0)throw Error('Game totals must equal $0')}
@@ -198,8 +318,8 @@ function renderResults(){
 }
 function setSettleView(view){settleView=view;document.querySelectorAll('[data-view]').forEach(b=>{const on=b.dataset.view===view;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});$('transfersView').classList.toggle('hidden',view!=='transfers');$('matrixView').classList.toggle('hidden',view!=='matrix')}
 
-function renderAll(){renderPeople();renderForm();renderEntries();renderResults()}
-function confirmBox(title,message,affirm='Confirm',danger=false){return new Promise(resolve=>{const target=$('modalContainer');target.innerHTML=`<div class="modalBackdrop"><div class="modal" role="dialog" aria-modal="true"><h2>${h(title)}</h2><p>${h(message)}</p><div class="modalBtns"><button class="btn" id="modalCancel">Cancel</button><button class="btn ${danger?'danger':'primary'}" id="modalConfirm">${h(affirm)}</button></div></div></div>`;const done=x=>{target.innerHTML='';resolve(x)};$('modalCancel').onclick=()=>done(false);$('modalConfirm').onclick=()=>done(true);target.firstElementChild.addEventListener('click',e=>{if(e.target===target.firstElementChild)done(false)})})}
+function renderAll(){renderPeople();renderForm();renderEntries();renderResults();localizePage()}
+function confirmBox(title,message,affirm='Confirm',danger=false){return new Promise(resolve=>{const target=$('modalContainer');target.innerHTML=`<div class="modalBackdrop"><div class="modal" role="dialog" aria-modal="true"><h2>${h(title)}</h2><p>${h(message)}</p><div class="modalBtns"><button class="btn" id="modalCancel">Cancel</button><button class="btn ${danger?'danger':'primary'}" id="modalConfirm">${h(affirm)}</button></div></div></div>`;localizePage();const done=x=>{target.innerHTML='';resolve(x)};$('modalCancel').onclick=()=>done(false);$('modalConfirm').onclick=()=>done(true);target.firstElementChild.addEventListener('click',e=>{if(e.target===target.firstElementChild)done(false)})})}
 async function deleteEntry(eid){const e=state.entries.find(x=>x.id===eid);if(!e)return;if(!await confirmBox('Delete entry?',e.label+' will be removed.','Delete',true))return;state.entries=state.entries.filter(x=>x.id!==eid);changed();toast('Entry deleted')}
 async function removePerson(pid){const p=state.people.find(x=>x.id===pid);if(!p)return;const refs=state.entries.some(e=>e.payer===pid||e.from===pid||e.to===pid||e.members?.includes(pid)||Object.hasOwn(e.deltas||{},pid));if(refs){toast('Delete entries for this person first');return}if(!await confirmBox('Remove person?',`Remove ${p.name}?`,'Remove',true))return;setGroup(pid,'');state.people=state.people.filter(x=>x.id!==pid);resetDraft();changed()}
 function recordPaid(t){const e={id:id(),type:'paid',label:'Settlement',time:Date.now(),from:t.from,to:t.to,amount:t.amount};validateRefs(e);state.entries.push(e);changed();toast('Payment recorded · '+fmt(t.amount))}
@@ -211,7 +331,7 @@ $('peopleList').addEventListener('click',e=>{const btn=e.target.closest('[data-r
 $('entryModes').addEventListener('click',e=>{const m=e.target.closest('[data-mode]')?.dataset.mode;if(m){mode=m;renderForm()}});
 $('entryForm').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='btnAddEntry'){try{addEntry()}catch(error){toast(error.message)}return}if(b.dataset.member){if(expenseDraft.members.has(b.dataset.member))expenseDraft.members.delete(b.dataset.member);else expenseDraft.members.add(b.dataset.member);renderForm();return}if(b.dataset.gmember){if(gameDraft.members.has(b.dataset.gmember))gameDraft.members.delete(b.dataset.gmember);else gameDraft.members.add(b.dataset.gmember);renderForm();return}if(b.dataset.quickSelect){expenseDraft.members=new Set(b.dataset.quickSelect==='all'?state.people.map(p=>p.id):[]);renderForm();return}if(b.dataset.quickGame){gameDraft.members=new Set(state.people.map(p=>p.id));renderForm()}});
 function syncField(el){const k=el.id,v=el.value;if(k==='eLabel')expenseDraft.label=v;else if(k==='eAmount')expenseDraft.amount=v;else if(k==='ePayer')expenseDraft.payer=v;else if(k==='gLabel')gameDraft.label=v;else if(k==='xLabel')extraDraft[mode].label=v;else if(k==='xAmount')extraDraft[mode].amount=v;else if(k==='xFrom')extraDraft[mode].from=v;else if(k==='xTo')extraDraft[mode].to=v}
-$('entryForm').addEventListener('change',e=>{syncField(e.target);if(e.target.id==='customSplit'){expenseDraft.custom=e.target.checked;const el=$('customFields');if(el)el.innerHTML=customHtml()}});
+$('entryForm').addEventListener('change',e=>{syncField(e.target);if(e.target.id==='customSplit'){expenseDraft.custom=e.target.checked;const el=$('customFields');if(el){el.innerHTML=customHtml();localizePage()}}});
 $('entryForm').addEventListener('input',e=>{syncField(e.target);if(e.target.dataset.part)expenseDraft.parts[e.target.dataset.part]=e.target.value;if(e.target.dataset.delta)gameDraft.deltas[e.target.dataset.delta]=e.target.value});
 $('entryList').addEventListener('click',e=>{const b=e.target.closest('[data-remove-entry]');if(b)deleteEntry(b.dataset.removeEntry)});
 $('transferList').addEventListener('click',e=>{const b=e.target.closest('[data-fully]');if(!b)return;const t=compute().transfers[Number(b.dataset.fully)];if(t)recordPaid(t)});
@@ -219,6 +339,9 @@ document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',(
 $('btnReset').addEventListener('click',async()=>{if(!await confirmBox('Reset all data?','Delete people, entries, and payments from this device?','Reset',true))return;state=baseState();resetDraft();changed();setTab('people');toast('Reset complete')});
 renderAll();
 setSettleView(settleView);
+if('serviceWorker' in navigator && location.protocol==='https:'){
+ window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Offline mode unavailable',err)));
+}
 </script>
 </body>
 </html>
