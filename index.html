@@ -19,7 +19,7 @@
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Google Sans Flex','JF Open Huninn',Roboto,Arial,sans-serif;font-size:16px;line-height:1.35;-webkit-font-smoothing:antialiased;font-variation-settings:'ROND' 100,'opsz' 18}
 button,input,textarea,select{font-variation-settings:'ROND' 100,'opsz' 18}
 button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}
-.wrap{max-width:680px;margin:auto;padding:10px 12px 36px}
+.wrap{max-width:680px;margin:auto;padding:10px 12px 20px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 .top{padding:4px 0 9px 7px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:49px}
 .brand{display:flex;align-items:center;justify-content:flex-start;gap:7px;white-space:nowrap;min-width:0}
 .brandEmoji{font-size:24px;line-height:1}
@@ -45,6 +45,9 @@ button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}bu
 .control{background:#fcfdfc;border:1px solid #d8e5de;border-radius:12px;padding:10px 11px;min-height:44px;width:100%;font-size:16px;min-width:0;outline:none}
 .control:focus{border-color:#207e6c;box-shadow:0 0 0 3px #207e6c1a}
 .inlineAdd{display:flex;align-items:stretch;gap:8px}.inlineAdd .control{flex:1;min-height:56px;resize:vertical}.inlineAdd .btn{align-self:stretch}
+.inputHint{margin:7px 1px 0;color:var(--muted);font-size:14px;line-height:1.4}
+.siteFooter{margin-top:auto;padding:18px 4px max(9px,env(safe-area-inset-bottom));text-align:center;color:var(--muted);font-size:13px;line-height:1.55}
+.siteFooter .footerBrand{font-weight:700;color:var(--ink)}
 .field{display:block;margin:11px 0}.field>span,.field .fieldTitle{display:block;color:var(--muted);font-weight:700;font-size:14px;margin:0 0 5px}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.row{display:flex;align-items:center;gap:9px}.row>*{min-width:0}
 .pile{display:grid;gap:6px}.person{display:flex;align-items:center;gap:7px;background:#fafcfb;border:1px solid #e4ebe7;padding:7px;border-radius:12px}
@@ -108,7 +111,7 @@ button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}bu
 </nav>
 <section id="peoplePanel" class="panel active" role="tabpanel">
 <div class="card"><div class="sectionHead"><h2 class="sectionTitle">Add people</h2><span class="muted tiny" id="peopleCount">0</span></div>
-<div class="inlineAdd"><textarea class="control" id="peopleInput" rows="2" placeholder="A, B, C ..." aria-label="Names, separated by commas or lines"></textarea><button class="btn primary" id="btnAddPeople" type="button">Add</button></div></div>
+<div class="inlineAdd"><textarea class="control" id="peopleInput" rows="2" placeholder="A, B, C ..." aria-label="Names, separated by commas or lines" aria-describedby="peopleHint"></textarea><button class="btn primary" id="btnAddPeople" type="button">Add</button></div><p id="peopleHint" class="inputHint">One name per line, or use commas / semicolons.</p></div>
 <div class="card"><div class="sectionHead"><h2 class="sectionTitle">People & groups</h2></div><div id="peopleList" class="pile"></div><div id="groupPreview" class="groupPreview"></div></div>
 <button class="btn primary fill" type="button" data-go="entries">Continue →</button>
 <div class="clearRow"><button class="btn" type="button" id="btnReset">Clear all data</button></div>
@@ -125,6 +128,7 @@ button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}bu
 <div class="card"><div id="transferList"></div></div></div>
 <div id="matrixView" class="hidden"><div class="settleHeading"><h2>Breakdown</h2></div><div id="matrixContainer"></div></div>
 </section>
+<footer class="siteFooter"><div class="footerBrand">© 2026 收PAY · v1.0.0</div><div>No account · Saved on this device</div></footer>
 </div>
 <div id="modalContainer"></div><div id="toast" role="status"></div>
 <script>
@@ -134,6 +138,8 @@ let language='en';
 try{language=localStorage.getItem(localeKey)==='zh'?'zh':'en'}catch{}
 const zhMap={
  'Language':'語言','Sections':'分頁','People':'人員','Entries':'帳目','Settle':'找數',
+ 'One name per line, or use commas / semicolons.':'每行輸入一個名字，亦可用逗號或分號分隔。',
+ 'No account · Saved on this device':'無需帳戶 · 資料儲存喺呢部裝置',
  'Add people':'加入人員','People & groups':'人員及分組','Add':'新增',
  'Continue →':'下一步 →','Clear all data':'清除所有資料','New entry':'新增帳目',
  'Expense':'開支','Game':'遊戲','Debt':'欠款','Paid':'已付',
